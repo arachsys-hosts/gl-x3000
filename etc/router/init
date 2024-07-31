@@ -62,10 +62,7 @@ start() {
   hostapd -s -B /etc/ap0.conf /etc/ap1.conf
   dnsmasq
 
-  while [[ ! -e /dev/wwan0mbim0 ]]; do
-    wait && read -t 1
-  done <><(:)
-
+  daemon -w /dev/wwan0mbim0
   if wwan /dev/wwan0mbim0 start; then
     ntpd -p /run/ntpd.pid -s
   fi

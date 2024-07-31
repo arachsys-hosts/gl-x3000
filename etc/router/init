@@ -27,7 +27,12 @@ start() {
   if [[ -c /dev/watchdog ]] && exec >/dev/watchdog && wait; then
     trap 'printf V && exit' TERM
     while printf '\0'; do read -t 5; done
-  fi <><(:) & disown
+  fi <><(:) &
+  disown $!
+
+  while read TTY _; do
+    daemon -c -r agetty $TTY
+  done < /proc/consoles
 
   nft -f /etc/filter
   sysctl -q net.ipv{4,6}.conf.all.forwarding=1
@@ -62,7 +67,7 @@ start() {
   done <><(:)
 
   if wwan /dev/wwan0mbim0 start; then
-    ntpd -p /run/ntpd.pid
+    ntpd -p /run/ntpd.pid -s
   fi
 
   echo default-on >/sys/class/leds/green:power/trigger

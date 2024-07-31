@@ -337,7 +337,7 @@ index 37b5f92d..159459db 100644
 +			continue;
 +
 +		if (!fwnode_property_read_u32(fw_part, "partno", &partno) &&
-+		    bdev->bd_partno != partno)
++		    bdev_partno(bdev) != partno)
 +			continue;
 +
 +		return fw_part;

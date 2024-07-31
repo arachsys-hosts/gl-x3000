@@ -11,11 +11,11 @@ if [[ ! -d src ]]; then
   pkg unpack -c cache -d $TMP/tf-a mtk-atf-20240117.tar.gz \
     https://github.com/mtk-openwrt/arm-trusted-firmware/archive/bacca82a.tar.gz
 
-  pkg unpack -c cache -d $TMP/u-boot u-boot-2024.07-rc4.tar.gz \
-    https://github.com/u-boot/u-boot/archive/refs/tags/v2024.07-rc4.tar.gz
+  pkg unpack -c cache -d $TMP/u-boot u-boot-2024.07.tar.gz \
+    https://github.com/u-boot/u-boot/archive/refs/tags/v2024.07.tar.gz
 
-  pkg unpack -c cache -d $TMP/linux linux-6.9.5.tar.xz \
-    https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.9.5.tar.xz
+  pkg unpack -c cache -d $TMP/linux linux-6.10.2.tar.xz \
+    https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.10.2.tar.xz
 
   if git init $TMP; then
     git -C $TMP add -f .
@@ -36,8 +36,8 @@ fi
 
 if [[ ! -d rootfs ]]; then
   IMGDIR="$IMGDIR/../arm64" pkg system rootfs \
-    curl dnsmasq e2fsprogs file hostap iproute2 iputils-ping iw ldns-tools \
-    kakoune mtr nftables openntpd openssh rsync shadow tcpdump tinymbim
+    curl dnsmasq e2fsprogs file hostapd iproute2 iputils-ping iw ldns-tools \
+    kakoune mtr nftables openntpd openssh rsync shadow tcpdump tinymbim ucom
   update-etc rootfs/etc
 
   rm -f -r rootfs/{etc/resolv.conf,lib/{include,static},run,tmp,var}

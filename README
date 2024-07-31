@@ -170,8 +170,8 @@ to be set correctly to initialise the modem for the kernel. The u-boot
 device tree contains gpio-hog nodes to do this and we fix a u-boot bug
 which would prevent them from being probed correctly.
 
-alignment.diff, gpiohog.diff, nvmem.diff and precal.diff have all been
-submitted upstream but have not landed in a release yet.
+alignment.diff, gpio.diff and nvmem.diff have all been submitted upstream
+but have not landed in a release yet.
 
 In the router /etc/init and /etc/filter, we masquerade both IPv4 and
 IPv6 rather than delegating or translating an IPv6 /64 prefix, to avoid

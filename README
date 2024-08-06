@@ -132,15 +132,17 @@ Provide sensible APN defaults when not set by MBIM:
   AT$QCPRFMOD=PID:1,APNNAME:"internet"
   AT$QCPRFMOD=PID:1,PDPTYPE:"IP"
 
-Select the USB3 interface and CDC-MBIM mode:
+Select the USB interface and CDC-MBIM mode with
 
   AT+QCFG="data_interface",0,0
   AT+QCFG="usbnet",2
-  AT+CFUN=1,1
 
-Alternatively, the PCIe MHI interface can be used with
+Alternatively, the faster PCIe MHI interface can be used with
 
   AT+QCFG="data_interface",1,0
+
+The init script and tinymbim will work in either mode without modification
+but the router needs to be rebooted when switching between them.
 
 
 NVMEM partition

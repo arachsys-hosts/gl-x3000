@@ -1,0 +1,27 @@
+diff --git a/linux/drivers/bus/mhi/host/pci_generic.c b/linux/drivers/bus/mhi/host/pci_generic.c
+index 08844ee7..7043d366 100644
+--- a/linux/drivers/bus/mhi/host/pci_generic.c
++++ b/linux/drivers/bus/mhi/host/pci_generic.c
+@@ -620,6 +620,9 @@ static const struct pci_device_id mhi_pci_id_table[] = {
+ 		.driver_data = (kernel_ulong_t) &mhi_telit_fn980_hw_v1_info },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0306),
+ 		.driver_data = (kernel_ulong_t) &mhi_qcom_sdx55_info },
++	/* RM520N-GL variant with Qualcomm vendor and subvendor ID */
++	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, PCI_VENDOR_ID_QCOM, 0x5201),
++		.driver_data = (kernel_ulong_t) &mhi_quectel_rm5xx_info },
+ 	/* Telit FN990 */
+ 	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, 0x1c5d, 0x2010),
+ 		.driver_data = (kernel_ulong_t) &mhi_telit_fn990_info },
+diff --git a/linux/drivers/net/wwan/mhi_wwan_mbim.c b/linux/drivers/net/wwan/mhi_wwan_mbim.c
+index f2aef84f..26cbb477 100644
+--- a/linux/drivers/net/wwan/mhi_wwan_mbim.c
++++ b/linux/drivers/net/wwan/mhi_wwan_mbim.c
+@@ -209,7 +209,7 @@ static int mbim_rx_verify_nth16(struct mhi_mbim_context *mbim, struct sk_buff *s
+ 	if (mbim->rx_seq + 1 != le16_to_cpu(nth16->wSequence) &&
+ 	    (mbim->rx_seq || le16_to_cpu(nth16->wSequence)) &&
+ 	    !(mbim->rx_seq == 0xffff && !le16_to_cpu(nth16->wSequence))) {
+-		net_err_ratelimited("sequence number glitch prev=%d curr=%d\n",
++		net_dbg_ratelimited("sequence number glitch prev=%d curr=%d\n",
+ 				    mbim->rx_seq, le16_to_cpu(nth16->wSequence));
+ 	}
+ 	mbim->rx_seq = le16_to_cpu(nth16->wSequence);

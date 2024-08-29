@@ -14,8 +14,8 @@ if [[ ! -d src ]]; then
   pkg unpack -c cache -d $TMP/u-boot u-boot-2024.07.tar.gz \
     https://github.com/u-boot/u-boot/archive/refs/tags/v2024.07.tar.gz
 
-  pkg unpack -c cache -d $TMP/linux linux-6.10.3.tar.xz \
-    https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.10.3.tar.xz
+  pkg unpack -c cache -d $TMP/linux linux-6.10.7.tar.xz \
+    https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.10.7.tar.xz
 
   if git init $TMP; then
     git -C $TMP add -f .

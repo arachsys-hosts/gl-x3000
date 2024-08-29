@@ -123,7 +123,7 @@ automation and switch the modem back to a generic profile with:
 
   AT+QMBNCFG="autosel",0
   AT+QMBNCFG="deactivate"
-  AT+QMBNCFG="select","ROW_Generic_3GPP_PTCRB_GCF"
+  AT+QMBNCFG="select","ROW_Commercial"
   AT+QCFG=“clat”,0
   AT+QMAP="ippt_nat",0
 

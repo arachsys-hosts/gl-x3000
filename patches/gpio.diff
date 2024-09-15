@@ -35,7 +35,7 @@ index 45d4def3..3b82423c 100644
  	.priv_auto	= sizeof(struct mtk_pinctrl_priv),
  };
 diff --git a/u-boot/drivers/pinctrl/mediatek/pinctrl-mt7981.c b/u-boot/drivers/pinctrl/mediatek/pinctrl-mt7981.c
-index 4bc4abe6..047e37bc 100644
+index 3fa198ed..d91c03bb 100644
 --- a/u-boot/drivers/pinctrl/mediatek/pinctrl-mt7981.c
 +++ b/u-boot/drivers/pinctrl/mediatek/pinctrl-mt7981.c
 @@ -1048,6 +1048,7 @@ U_BOOT_DRIVER(mt7981_pinctrl) = {
@@ -45,7 +45,7 @@ index 4bc4abe6..047e37bc 100644
 +	.bind = mtk_pinctrl_common_bind,
  	.probe = mtk_pinctrl_mt7981_probe,
  	.priv_auto = sizeof(struct mtk_pinctrl_priv),
- 	.flags = DM_FLAG_PRE_RELOC,
+ };
 diff --git a/u-boot/drivers/pinctrl/mediatek/pinctrl-mt7986.c b/u-boot/drivers/pinctrl/mediatek/pinctrl-mt7986.c
 index 819d6448..bf8cd037 100644
 --- a/u-boot/drivers/pinctrl/mediatek/pinctrl-mt7986.c
@@ -107,10 +107,10 @@ index 66fcfdff..333184a6 100644
  	.priv_auto	= sizeof(struct mtk_pinctrl_priv),
  };
 diff --git a/u-boot/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/u-boot/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-index ede3959c..0d1db457 100644
+index 0baef57c..c5dcddad 100644
 --- a/u-boot/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
 +++ b/u-boot/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-@@ -791,11 +791,20 @@ bind:
+@@ -782,11 +782,20 @@ static int mtk_gpiochip_register(struct udevice *parent)
  }
  #endif
  
@@ -132,7 +132,7 @@ index ede3959c..0d1db457 100644
  	u32 i = 0;
  	fdt_addr_t addr;
  	u32 base_calc = soc->base_calc;
-@@ -813,10 +822,5 @@ int mtk_pinctrl_common_probe(struct udevice *dev,
+@@ -804,10 +813,5 @@ int mtk_pinctrl_common_probe(struct udevice *dev,
  		priv->base[i] = (void __iomem *)addr;
  	}
  

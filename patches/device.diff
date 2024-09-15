@@ -1,5 +1,5 @@
 diff --git a/linux/arch/arm64/boot/dts/mediatek/Makefile b/linux/arch/arm64/boot/dts/mediatek/Makefile
-index 37b4ca3a..cd30484a 100644
+index 8fd7b2bb..058d2984 100644
 --- a/linux/arch/arm64/boot/dts/mediatek/Makefile
 +++ b/linux/arch/arm64/boot/dts/mediatek/Makefile
 @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
@@ -7,12 +7,12 @@ index 37b4ca3a..cd30484a 100644
  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
 +dtb-$(CONFIG_ARCH_MEDIATEK) += mt7981a-glinet-gl-x3000.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt7981b-cudy-wr3000-v1.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt7981b-openwrt-one.dtb
  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7981b-xiaomi-ax3000t.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-acelink-ew-7886cax.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-bananapi-bpi-r3.dtb
 diff --git a/linux/arch/arm64/boot/dts/mediatek/mt7981a-glinet-gl-x3000.dts b/linux/arch/arm64/boot/dts/mediatek/mt7981a-glinet-gl-x3000.dts
 new file mode 100644
-index 00000000..88eee93e
+index 00000000..d4ffbe76
 --- /dev/null
 +++ b/linux/arch/arm64/boot/dts/mediatek/mt7981a-glinet-gl-x3000.dts
 @@ -0,0 +1,240 @@

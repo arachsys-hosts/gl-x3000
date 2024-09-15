@@ -173,10 +173,10 @@ index fd347126..95ccbda8 100644
      };
  
 diff --git a/linux/block/Kconfig b/linux/block/Kconfig
-index 1de4682d..6c8a9b0f 100644
+index 5b623b87..67cd4f92 100644
 --- a/linux/block/Kconfig
 +++ b/linux/block/Kconfig
-@@ -229,6 +229,12 @@ config BLK_INLINE_ENCRYPTION_FALLBACK
+@@ -209,6 +209,12 @@ config BLK_INLINE_ENCRYPTION_FALLBACK
  	  by falling back to the kernel crypto API when inline
  	  encryption hardware is not present.
  
@@ -190,20 +190,20 @@ index 1de4682d..6c8a9b0f 100644
  
  config BLK_MQ_PCI
 diff --git a/linux/block/Makefile b/linux/block/Makefile
-index 46ada9dc..c46e2f89 100644
+index ddfd21c1..a131fa7d 100644
 --- a/linux/block/Makefile
 +++ b/linux/block/Makefile
-@@ -40,3 +40,4 @@ obj-$(CONFIG_BLK_INLINE_ENCRYPTION)	+= blk-crypto.o blk-crypto-profile.o \
+@@ -38,3 +38,4 @@ obj-$(CONFIG_BLK_INLINE_ENCRYPTION)	+= blk-crypto.o blk-crypto-profile.o \
  					   blk-crypto-sysfs.o
  obj-$(CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK)	+= blk-crypto-fallback.o
  obj-$(CONFIG_BLOCK_HOLDER_DEPRECATED)	+= holder.o
 +obj-$(CONFIG_BLOCK_NOTIFIERS) += blk-notify.o
 diff --git a/linux/block/blk-notify.c b/linux/block/blk-notify.c
 new file mode 100644
-index 00000000..594df7aa
+index 00000000..fd727288
 --- /dev/null
 +++ b/linux/block/blk-notify.c
-@@ -0,0 +1,88 @@
+@@ -0,0 +1,87 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
 + * Notifiers for addition and removal of block devices
@@ -261,7 +261,6 @@ index 00000000..594df7aa
 +	list_add_tail(&new_blkdev->list, &blk_devices);
 +	raw_notifier_call_chain(&blk_notifier_list, BLK_DEVICE_ADD, dev);
 +	mutex_unlock(&blk_notifier_lock);
-+
 +	return 0;
 +}
 +
@@ -293,7 +292,7 @@ index 00000000..594df7aa
 +}
 +device_initcall(blk_notifications_init);
 diff --git a/linux/block/partitions/core.c b/linux/block/partitions/core.c
-index 37b5f92d..159459db 100644
+index ab76e64f..cd54300e 100644
 --- a/linux/block/partitions/core.c
 +++ b/linux/block/partitions/core.c
 @@ -10,6 +10,8 @@
@@ -305,39 +304,70 @@ index 37b5f92d..159459db 100644
  #include "check.h"
  
  static int (*const check_part[])(struct parsed_partitions *) = {
-@@ -281,6 +283,43 @@ static ssize_t whole_disk_show(struct device *dev,
+@@ -281,6 +283,74 @@ static ssize_t whole_disk_show(struct device *dev,
  }
  static const DEVICE_ATTR(whole_disk, 0444, whole_disk_show, NULL);
  
++static bool part_meta_match(const char *attr, const char *member, size_t length)
++{
++	/* check if length of attr exceeds specified maximum length */
++	if (strnlen(attr, length) == length)
++		return false;
++
++	/* return true if strings match */
++	return !strncmp(attr, member, length);
++}
++
 +static struct fwnode_handle *find_partition_fwnode(struct block_device *bdev)
 +{
 +	struct fwnode_handle *fw_parts, *fw_part;
 +	struct device *ddev = disk_to_dev(bdev->bd_disk);
 +	const char *partname, *uuid;
 +	u32 partno;
++	bool got_uuid, got_partname, got_partno;
 +
 +	fw_parts = device_get_named_child_node(ddev, "partitions");
-+	if (!fw_parts)
-+		fw_parts = device_get_named_child_node(ddev->parent, "partitions");
-+
 +	if (!fw_parts)
 +		return NULL;
 +
 +	fwnode_for_each_child_node(fw_parts, fw_part) {
-+		if (!fwnode_property_read_string(fw_part, "uuid", &uuid) &&
-+		    (!bdev->bd_meta_info || strncmp(uuid,
-+						    bdev->bd_meta_info->uuid,
-+						    PARTITION_META_INFO_UUIDLTH)))
++		got_uuid = false;
++		got_partname = false;
++		got_partno = false;
++		/*
++		 * In case 'uuid' is defined in the partitions firmware node
++		 * require partition meta info being present and the specified
++		 * uuid to match.
++		 */
++		got_uuid = !fwnode_property_read_string(fw_part, "uuid", &uuid);
++		if (got_uuid && (!bdev->bd_meta_info ||
++				 !part_meta_match(uuid, bdev->bd_meta_info->uuid,
++						  PARTITION_META_INFO_UUIDLTH)))
 +			continue;
 +
-+		if (!fwnode_property_read_string(fw_part, "partname", &partname) &&
-+		    (!bdev->bd_meta_info || strncmp(partname,
-+						    bdev->bd_meta_info->volname,
-+						    PARTITION_META_INFO_VOLNAMELTH)))
++		/*
++		 * In case 'partname' is defined in the partitions firmware node
++		 * require partition meta info being present and the specified
++		 * volname to match.
++		 */
++		got_partname = !fwnode_property_read_string(fw_part, "partname",
++							    &partname);
++		if (got_partname && (!bdev->bd_meta_info ||
++				     !part_meta_match(partname,
++						      bdev->bd_meta_info->volname,
++						      PARTITION_META_INFO_VOLNAMELTH)))
 +			continue;
 +
-+		if (!fwnode_property_read_u32(fw_part, "partno", &partno) &&
-+		    bdev_partno(bdev) != partno)
++		/*
++		 * In case 'partno' is defined in the partitions firmware node
++		 * the specified partno needs to match.
++		 */
++		got_partno = !fwnode_property_read_u32(fw_part, "partno", &partno);
++		if (got_partno && bdev_partno(bdev) != partno)
++			continue;
++
++		/* Skip if no matching criteria is present in firmware node */
++		if (!got_uuid && !got_partname && !got_partno)
 +			continue;
 +
 +		return fw_part;
@@ -349,7 +379,7 @@ index 37b5f92d..159459db 100644
  /*
   * Must be called either with open_mutex held, before a disk can be opened or
   * after all disk users are gone.
-@@ -355,6 +394,8 @@ static struct block_device *add_partition(struct gendisk *disk, int partno,
+@@ -355,6 +425,8 @@ static struct block_device *add_partition(struct gendisk *disk, int partno,
  			goto out_put;
  	}
  
@@ -359,7 +389,7 @@ index 37b5f92d..159459db 100644
  	dev_set_uevent_suppress(pdev, 1);
  	err = device_add(pdev);
 diff --git a/linux/drivers/mmc/core/block.c b/linux/drivers/mmc/core/block.c
-index 90c51b12..782eb3c8 100644
+index 2c996324..fa76aae0 100644
 --- a/linux/drivers/mmc/core/block.c
 +++ b/linux/drivers/mmc/core/block.c
 @@ -2463,6 +2463,7 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
@@ -370,7 +400,7 @@ index 90c51b12..782eb3c8 100644
  	struct mmc_blk_data *md;
  	int devidx, ret;
  	char cap_str[10];
-@@ -2515,6 +2516,7 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
+@@ -2531,6 +2532,7 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
  	md->disk->major	= MMC_BLOCK_MAJOR;
  	md->disk->minors = perdev_minors;
  	md->disk->first_minor = devidx * perdev_minors;
@@ -378,9 +408,9 @@ index 90c51b12..782eb3c8 100644
  	md->disk->fops = &mmc_bdops;
  	md->disk->private_data = md;
  	md->parent = parent;
-@@ -2559,6 +2561,12 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
+@@ -2555,6 +2557,12 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
  
- 	blk_queue_write_cache(md->queue.queue, cache_enabled, fua_enabled);
+ 	set_capacity(md->disk, size);
  
 +	fwnode = device_get_named_child_node(subname ? md->parent->parent :
 +						       md->parent,
@@ -449,7 +479,7 @@ index cdd01fbf..68fcf845 100644
  obj-$(CONFIG_NVMEM_IMX_IIM)		+= nvmem-imx-iim.o
 diff --git a/linux/drivers/nvmem/block.c b/linux/drivers/nvmem/block.c
 new file mode 100644
-index 00000000..b29b0d6e
+index 00000000..6de3ea64
 --- /dev/null
 +++ b/linux/drivers/nvmem/block.c
 @@ -0,0 +1,197 @@
@@ -474,9 +504,9 @@ index 00000000..b29b0d6e
 +static DEFINE_MUTEX(devices_mutex);
 +
 +struct blk_nvmem {
-+	struct nvmem_device	*nvmem;
-+	struct device		*dev;
-+	struct list_head	list;
++	struct nvmem_device *nvmem;
++	struct device *dev;
++	struct list_head list;
 +};
 +
 +static int blk_nvmem_reg_read(void *priv, unsigned int from,
@@ -651,7 +681,7 @@ index 00000000..b29b0d6e
 +MODULE_AUTHOR("Daniel Golle <daniel@makrotopia.org>");
 +MODULE_DESCRIPTION("block device NVMEM provider");
 diff --git a/linux/drivers/nvmem/core.c b/linux/drivers/nvmem/core.c
-index 2c6b9940..34d51231 100644
+index 33ffa2aa..1a34ac0a 100644
 --- a/linux/drivers/nvmem/core.c
 +++ b/linux/drivers/nvmem/core.c
 @@ -7,9 +7,12 @@
@@ -667,7 +697,7 @@ index 2c6b9940..34d51231 100644
  #include <linux/init.h>
  #include <linux/kref.h>
  #include <linux/module.h>
-@@ -780,6 +783,62 @@ static int nvmem_validate_keepouts(struct nvmem_device *nvmem)
+@@ -797,6 +800,62 @@ static int nvmem_validate_keepouts(struct nvmem_device *nvmem)
  	return 0;
  }
  
@@ -730,7 +760,7 @@ index 2c6b9940..34d51231 100644
  static int nvmem_add_cells_from_dt(struct nvmem_device *nvmem, struct device_node *np)
  {
  	struct device *dev = &nvmem->dev;
-@@ -819,6 +878,25 @@ static int nvmem_add_cells_from_dt(struct nvmem_device *nvmem, struct device_nod
+@@ -836,6 +895,25 @@ static int nvmem_add_cells_from_dt(struct nvmem_device *nvmem, struct device_nod
  		if (nvmem->fixup_dt_cell_info)
  			nvmem->fixup_dt_cell_info(nvmem, &info);
  
@@ -757,7 +787,7 @@ index 2c6b9940..34d51231 100644
  		kfree(info.name);
  		if (ret) {
 diff --git a/linux/include/linux/blkdev.h b/linux/include/linux/blkdev.h
-index 00e62b81..a423cf74 100644
+index b7664d59..b1c464aa 100644
 --- a/linux/include/linux/blkdev.h
 +++ b/linux/include/linux/blkdev.h
 @@ -81,11 +81,13 @@ struct partition_meta_info {
@@ -774,16 +804,19 @@ index 00e62b81..a423cf74 100644
  };
  
  enum {
-@@ -1600,4 +1602,12 @@ struct io_comp_batch {
+@@ -1677,4 +1679,15 @@ static inline bool bdev_can_atomic_write(struct block_device *bdev)
  
  #define DEFINE_IO_COMP_BATCH(name)	struct io_comp_batch name = { }
  
 +
-+#ifdef CONFIG_BLOCK_NOTIFIERS
 +#define BLK_DEVICE_ADD		1
 +#define BLK_DEVICE_REMOVE	2
++#if defined(CONFIG_BLOCK_NOTIFIERS)
 +void blk_register_notify(struct notifier_block *nb);
 +void blk_unregister_notify(struct notifier_block *nb);
++#else
++static inline void blk_register_notify(struct notifier_block *nb) { };
++static inline void blk_unregister_notify(struct notifier_block *nb) { };
 +#endif
 +
  #endif /* _LINUX_BLKDEV_H */

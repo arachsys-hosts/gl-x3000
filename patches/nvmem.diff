@@ -292,7 +292,7 @@ index 00000000..fd727288
 +}
 +device_initcall(blk_notifications_init);
 diff --git a/linux/block/partitions/core.c b/linux/block/partitions/core.c
-index ab76e64f..cd54300e 100644
+index 5bd7a603..58906ed0 100644
 --- a/linux/block/partitions/core.c
 +++ b/linux/block/partitions/core.c
 @@ -10,6 +10,8 @@
@@ -389,10 +389,10 @@ index ab76e64f..cd54300e 100644
  	dev_set_uevent_suppress(pdev, 1);
  	err = device_add(pdev);
 diff --git a/linux/drivers/mmc/core/block.c b/linux/drivers/mmc/core/block.c
-index 2c996324..fa76aae0 100644
+index ef06a4d5..1451534c 100644
 --- a/linux/drivers/mmc/core/block.c
 +++ b/linux/drivers/mmc/core/block.c
-@@ -2463,6 +2463,7 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
+@@ -2509,6 +2509,7 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
  					      int area_type,
  					      unsigned int part_type)
  {
@@ -400,7 +400,7 @@ index 2c996324..fa76aae0 100644
  	struct mmc_blk_data *md;
  	int devidx, ret;
  	char cap_str[10];
-@@ -2531,6 +2532,7 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
+@@ -2577,6 +2578,7 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
  	md->disk->major	= MMC_BLOCK_MAJOR;
  	md->disk->minors = perdev_minors;
  	md->disk->first_minor = devidx * perdev_minors;
@@ -408,7 +408,7 @@ index 2c996324..fa76aae0 100644
  	md->disk->fops = &mmc_bdops;
  	md->disk->private_data = md;
  	md->parent = parent;
-@@ -2555,6 +2557,12 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
+@@ -2601,6 +2603,12 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
  
  	set_capacity(md->disk, size);
  
@@ -435,7 +435,7 @@ index 0ddaee0e..e1c5fc1b 100644
  	device_enable_async_suspend(&card->dev);
  
 diff --git a/linux/drivers/nvmem/Kconfig b/linux/drivers/nvmem/Kconfig
-index 28313449..3598fa70 100644
+index d2c384f5..51257aa2 100644
 --- a/linux/drivers/nvmem/Kconfig
 +++ b/linux/drivers/nvmem/Kconfig
 @@ -2,6 +2,7 @@
@@ -787,7 +787,7 @@ index 33ffa2aa..1a34ac0a 100644
  		kfree(info.name);
  		if (ret) {
 diff --git a/linux/include/linux/blkdev.h b/linux/include/linux/blkdev.h
-index b7664d59..b1c464aa 100644
+index 50c3b959..902bd2d1 100644
 --- a/linux/include/linux/blkdev.h
 +++ b/linux/include/linux/blkdev.h
 @@ -81,11 +81,13 @@ struct partition_meta_info {
@@ -804,7 +804,7 @@ index b7664d59..b1c464aa 100644
  };
  
  enum {
-@@ -1677,4 +1679,15 @@ static inline bool bdev_can_atomic_write(struct block_device *bdev)
+@@ -1676,4 +1678,15 @@ static inline bool bdev_can_atomic_write(struct block_device *bdev)
  
  #define DEFINE_IO_COMP_BATCH(name)	struct io_comp_batch name = { }
  

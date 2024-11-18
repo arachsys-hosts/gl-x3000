@@ -1,5 +1,5 @@
 diff --git a/linux/net/core/neighbour.c b/linux/net/core/neighbour.c
-index 552719c3..e2b5ff52 100644
+index 77b819cd..45c51004 100644
 --- a/linux/net/core/neighbour.c
 +++ b/linux/net/core/neighbour.c
 @@ -444,7 +444,10 @@ static int __neigh_ifdown(struct neigh_table *tbl, struct net_device *dev,

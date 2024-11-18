@@ -132,14 +132,14 @@ Provide sensible APN defaults when not set by MBIM:
   AT$QCPRFMOD=PID:1,APNNAME:"internet"
   AT$QCPRFMOD=PID:1,PDPTYPE:"IP"
 
-Select the USB interface and CDC-MBIM mode with
+Select the high-speed PCIe MHI interface with
+
+  AT+QCFG="data_interface",1,0
+
+Alternatively, the slower USB2 interface can be used in CDC-MBIM mode with
 
   AT+QCFG="data_interface",0,0
   AT+QCFG="usbnet",2
-
-Alternatively, the faster PCIe MHI interface can be used with
-
-  AT+QCFG="data_interface",1,0
 
 The init script and tinymbim will work in either mode without modification
 but the router needs to be rebooted when switching between them.

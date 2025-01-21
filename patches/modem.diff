@@ -1,5 +1,5 @@
 diff --git a/linux/drivers/bus/mhi/host/pci_generic.c b/linux/drivers/bus/mhi/host/pci_generic.c
-index 9938bb03..fd890ded 100644
+index 56ba4192..64326e83 100644
 --- a/linux/drivers/bus/mhi/host/pci_generic.c
 +++ b/linux/drivers/bus/mhi/host/pci_generic.c
 @@ -732,6 +732,9 @@ static const struct pci_device_id mhi_pci_id_table[] = {

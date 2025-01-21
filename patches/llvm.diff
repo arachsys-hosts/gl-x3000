@@ -1,8 +1,8 @@
 diff --git a/linux/Makefile b/linux/Makefile
-index 68a8faff..d1c2c8c7 100644
+index b9464c88..b3f91fef 100644
 --- a/linux/Makefile
 +++ b/linux/Makefile
-@@ -420,6 +420,9 @@ HOST_LFS_CFLAGS := $(shell getconf LFS_CFLAGS 2>/dev/null)
+@@ -445,6 +445,9 @@ HOST_LFS_CFLAGS := $(shell getconf LFS_CFLAGS 2>/dev/null)
  HOST_LFS_LDFLAGS := $(shell getconf LFS_LDFLAGS 2>/dev/null)
  HOST_LFS_LIBS := $(shell getconf LFS_LIBS 2>/dev/null)
  
@@ -12,7 +12,7 @@ index 68a8faff..d1c2c8c7 100644
  ifneq ($(LLVM),)
  ifneq ($(filter %/,$(LLVM)),)
  LLVM_PREFIX := $(LLVM)
-@@ -472,7 +475,7 @@ KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
+@@ -502,7 +505,7 @@ KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
  CPP		= $(CC) -E
  ifneq ($(LLVM),)
  CC		= $(LLVM_PREFIX)clang$(LLVM_SUFFIX)

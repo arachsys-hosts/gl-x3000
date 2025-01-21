@@ -1,8 +1,8 @@
 diff --git a/linux/drivers/mmc/host/mtk-sd.c b/linux/drivers/mmc/host/mtk-sd.c
-index 89018b6c..6ab0c08a 100644
+index af445d3f..aa3c47b7 100644
 --- a/linux/drivers/mmc/host/mtk-sd.c
 +++ b/linux/drivers/mmc/host/mtk-sd.c
-@@ -1157,7 +1157,7 @@ static void msdc_track_cmd_data(struct msdc_host *host, struct mmc_command *cmd)
+@@ -1248,7 +1248,7 @@ static void msdc_track_cmd_data(struct msdc_host *host, struct mmc_command *cmd)
  	if (host->error &&
  	    ((!mmc_op_tuning(cmd->opcode) && !host->hs400_tuning) ||
  	     cmd->error == -ETIMEDOUT))

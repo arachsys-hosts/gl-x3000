@@ -36,7 +36,7 @@
 		reset {
 			label = "reset";
 			linux,code = <KEY_RESTART>;
-			gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
+			gpios = <&pio 1 GPIO_ACTIVE_LOW>;
 		};
 	};
 
@@ -45,42 +45,42 @@
 
 		power {
 			label = "green:power";
-			gpios = <&gpio 39 GPIO_ACTIVE_LOW>;
+			gpios = <&pio 39 GPIO_ACTIVE_LOW>;
 		};
 
 		internet {
 			label = "green:internet";
-			gpios = <&gpio 31 GPIO_ACTIVE_LOW>;
+			gpios = <&pio 31 GPIO_ACTIVE_LOW>;
 		};
 
 		wifi-2g {
 			label = "green:wifi:2g";
-			gpios = <&gpio 30 GPIO_ACTIVE_LOW>;
+			gpios = <&pio 30 GPIO_ACTIVE_LOW>;
 		};
 
 		wifi-5g {
 			label = "green:wifi:5g";
-			gpios = <&gpio 38 GPIO_ACTIVE_LOW>;
+			gpios = <&pio 38 GPIO_ACTIVE_LOW>;
 		};
 
 		signal-1 {
 			label = "green:signal:1";
-			gpios = <&gpio 6 GPIO_ACTIVE_LOW>;
+			gpios = <&pio 6 GPIO_ACTIVE_LOW>;
 		};
 
 		signal-2 {
 			label = "green:signal:2";
-			gpios = <&gpio 7 GPIO_ACTIVE_LOW>;
+			gpios = <&pio 7 GPIO_ACTIVE_LOW>;
 		};
 
 		signal-3 {
 			label = "green:signal:3";
-			gpios = <&gpio 8 GPIO_ACTIVE_LOW>;
+			gpios = <&pio 8 GPIO_ACTIVE_LOW>;
 		};
 
 		signal-4 {
 			label = "green:signal:4";
-			gpios = <&gpio 4 GPIO_ACTIVE_HIGH>;
+			gpios = <&pio 4 GPIO_ACTIVE_HIGH>;
 		};
 	};
 };
@@ -103,7 +103,7 @@
 	};
 };
 
-&gpio {
+&pio {
 	hub-power {
 		gpio-hog;
 		gpios = <5 GPIO_ACTIVE_HIGH>;
@@ -132,7 +132,7 @@
 &mmc0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&mmc0_pins_default>;
-	max-frequency = <52000000>;
+	max-frequency = <26000000>;
 	bus-width = <8>;
 	cap-mmc-hw-highspeed;
 	cap-mmc-hw-reset;
@@ -141,7 +141,7 @@
 	status = "okay";
 };
 
-&pinctrl {
+&pio {
 	mmc0_pins_default: mmc0-pins-default {
 		mux {
 			function = "flash";
@@ -152,17 +152,17 @@
 				"SPI0_CS",  "SPI0_HOLD", "SPI0_WP",
 				"SPI1_CLK", "SPI1_MOSI", "SPI1_MISO";
 			input-enable;
-			drive-strength = <MTK_DRIVE_4mA>;
+			drive-strength = <MTK_DRIVE_12mA>;
 			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
 		};
 		conf-clk {
 			pins = "SPI1_CS";
-			drive-strength = <MTK_DRIVE_6mA>;
+			drive-strength = <MTK_DRIVE_12mA>;
 			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
 		};
 		conf-rst {
 			pins = "GPIO_WPS";
-			drive-strength = <MTK_DRIVE_4mA>;
+			drive-strength = <MTK_DRIVE_12mA>;
 			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
 		};
 	};

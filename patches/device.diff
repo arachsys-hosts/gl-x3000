@@ -1,5 +1,5 @@
 diff --git a/linux/arch/arm64/boot/dts/mediatek/Makefile b/linux/arch/arm64/boot/dts/mediatek/Makefile
-index 8fd7b2bb..058d2984 100644
+index b763b737..ad467833 100644
 --- a/linux/arch/arm64/boot/dts/mediatek/Makefile
 +++ b/linux/arch/arm64/boot/dts/mediatek/Makefile
 @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb

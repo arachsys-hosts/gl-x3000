@@ -16,10 +16,10 @@ index 5b623b87..67cd4f92 100644
  
  config BLK_MQ_PCI
 diff --git a/linux/block/Makefile b/linux/block/Makefile
-index ddfd21c1..a131fa7d 100644
+index 33748123..fab9c506 100644
 --- a/linux/block/Makefile
 +++ b/linux/block/Makefile
-@@ -38,3 +38,4 @@ obj-$(CONFIG_BLK_INLINE_ENCRYPTION)	+= blk-crypto.o blk-crypto-profile.o \
+@@ -36,3 +36,4 @@ obj-$(CONFIG_BLK_INLINE_ENCRYPTION)	+= blk-crypto.o blk-crypto-profile.o \
  					   blk-crypto-sysfs.o
  obj-$(CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK)	+= blk-crypto-fallback.o
  obj-$(CONFIG_BLOCK_HOLDER_DEPRECATED)	+= holder.o
@@ -497,7 +497,7 @@ index 00000000..6de3ea64
 +MODULE_AUTHOR("Daniel Golle <daniel@makrotopia.org>");
 +MODULE_DESCRIPTION("block device NVMEM provider");
 diff --git a/linux/drivers/nvmem/core.c b/linux/drivers/nvmem/core.c
-index d6494dfc..f367e04d 100644
+index fff85bbf..21d57daf 100644
 --- a/linux/drivers/nvmem/core.c
 +++ b/linux/drivers/nvmem/core.c
 @@ -7,9 +7,12 @@
@@ -513,7 +513,7 @@ index d6494dfc..f367e04d 100644
  #include <linux/init.h>
  #include <linux/kref.h>
  #include <linux/module.h>
-@@ -807,6 +810,62 @@ static int nvmem_validate_keepouts(struct nvmem_device *nvmem)
+@@ -810,6 +813,62 @@ static int nvmem_validate_keepouts(struct nvmem_device *nvmem)
  	return 0;
  }
  
@@ -576,7 +576,7 @@ index d6494dfc..f367e04d 100644
  static int nvmem_add_cells_from_dt(struct nvmem_device *nvmem, struct device_node *np)
  {
  	struct device *dev = &nvmem->dev;
-@@ -846,6 +905,25 @@ static int nvmem_add_cells_from_dt(struct nvmem_device *nvmem, struct device_nod
+@@ -849,6 +908,25 @@ static int nvmem_add_cells_from_dt(struct nvmem_device *nvmem, struct device_nod
  		if (nvmem->fixup_dt_cell_info)
  			nvmem->fixup_dt_cell_info(nvmem, &info);
  
@@ -603,7 +603,7 @@ index d6494dfc..f367e04d 100644
  		kfree(info.name);
  		if (ret) {
 diff --git a/linux/include/linux/blkdev.h b/linux/include/linux/blkdev.h
-index 378d3a1a..01d03c74 100644
+index d3775178..c196946f 100644
 --- a/linux/include/linux/blkdev.h
 +++ b/linux/include/linux/blkdev.h
 @@ -82,11 +82,13 @@ struct partition_meta_info {
@@ -620,7 +620,7 @@ index 378d3a1a..01d03c74 100644
  };
  
  enum {
-@@ -1738,4 +1740,15 @@ bdev_atomic_write_unit_max_bytes(struct block_device *bdev)
+@@ -1747,4 +1749,15 @@ bdev_atomic_write_unit_max_bytes(struct block_device *bdev)
  
  #define DEFINE_IO_COMP_BATCH(name)	struct io_comp_batch name = { }
  

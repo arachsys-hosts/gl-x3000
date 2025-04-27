@@ -1,5 +1,5 @@
 diff --git a/linux/Makefile b/linux/Makefile
-index b9464c88..b3f91fef 100644
+index 907a4565..33380938 100644
 --- a/linux/Makefile
 +++ b/linux/Makefile
 @@ -445,6 +445,9 @@ HOST_LFS_CFLAGS := $(shell getconf LFS_CFLAGS 2>/dev/null)
@@ -12,7 +12,7 @@ index b9464c88..b3f91fef 100644
  ifneq ($(LLVM),)
  ifneq ($(filter %/,$(LLVM)),)
  LLVM_PREFIX := $(LLVM)
-@@ -502,7 +505,7 @@ KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
+@@ -503,7 +506,7 @@ KBUILD_PROCMACROLDFLAGS := $(or $(PROCMACROLDFLAGS),$(KBUILD_HOSTLDFLAGS))
  CPP		= $(CC) -E
  ifneq ($(LLVM),)
  CC		= $(LLVM_PREFIX)clang$(LLVM_SUFFIX)
@@ -22,7 +22,7 @@ index b9464c88..b3f91fef 100644
  NM		= $(LLVM_PREFIX)llvm-nm$(LLVM_SUFFIX)
  OBJCOPY		= $(LLVM_PREFIX)llvm-objcopy$(LLVM_SUFFIX)
 diff --git a/linux/tools/scripts/Makefile.include b/linux/tools/scripts/Makefile.include
-index 0aa40050..2cc571ca 100644
+index 45f4abef..453096f5 100644
 --- a/linux/tools/scripts/Makefile.include
 +++ b/linux/tools/scripts/Makefile.include
 @@ -60,7 +60,7 @@ endif
@@ -34,52 +34,8 @@ index 0aa40050..2cc571ca 100644
  $(call allow-override,CXX,$(LLVM_PREFIX)clang++$(LLVM_SUFFIX))
  $(call allow-override,STRIP,$(LLVM_PREFIX)llvm-strip$(LLVM_SUFFIX))
  else
-diff --git a/tf-a/Makefile b/tf-a/Makefile
-index f4412b9b..ba18ff67 100644
---- a/tf-a/Makefile
-+++ b/tf-a/Makefile
-@@ -99,26 +99,20 @@ export Q ECHO
- # Toolchain
- ################################################################################
- 
--HOSTCC			:=	gcc
-+HOSTCC			:=	cc
- export HOSTCC
- 
--CC			:=	${CROSS_COMPILE}gcc
-+CC			:=	${CROSS_COMPILE}clang
- CPP			:=	${CROSS_COMPILE}cpp
--AS			:=	${CROSS_COMPILE}gcc
-+AS			:=	${CROSS_COMPILE}${CC}
- AR			:=	${CROSS_COMPILE}ar
- LINKER			:=	${CROSS_COMPILE}ld
- OC			:=	${CROSS_COMPILE}objcopy
- OD			:=	${CROSS_COMPILE}objdump
- NM			:=	${CROSS_COMPILE}nm
--PP			:=	${CROSS_COMPILE}gcc -E
-+PP			:=	${CROSS_COMPILE}${CC} -E
- DTC			:=	dtc
- 
--# Use ${LD}.bfd instead if it exists (as absolute path or together with $PATH).
--ifneq ($(strip $(wildcard ${LD}.bfd) \
--	$(foreach dir,$(subst :, ,${PATH}),$(wildcard ${dir}/${LINKER}.bfd))),)
--LINKER			:=	${LINKER}.bfd
--endif
--
- ################################################################################
- # Auxiliary tools (fiptool, cert_create, etc)
- ################################################################################
-@@ -182,7 +176,7 @@ ifneq ($(findstring clang,$(notdir $(CC))),)
- 	else
- 		TF_CFLAGS_aarch32	=	$(target32-directive)
- 		TF_CFLAGS_aarch64	:=	-target aarch64-elf
--		LD			:=	$(shell $(CC) --print-prog-name ld.lld)
-+		LD			:=	$(shell $(CC) --print-prog-name llvm-ld)
- 
- 		AR			:=	$(shell $(CC) --print-prog-name llvm-ar)
- 		OD			:=	$(shell $(CC) --print-prog-name llvm-objdump)
 diff --git a/u-boot/Makefile b/u-boot/Makefile
-index 28094fa4..7ffedaee 100644
+index 3a5e0452..ec0c7fd9 100644
 --- a/u-boot/Makefile
 +++ b/u-boot/Makefile
 @@ -392,13 +392,8 @@ include scripts/Kbuild.include

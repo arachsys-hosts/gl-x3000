@@ -1,8 +1,8 @@
 diff --git a/u-boot/Makefile b/u-boot/Makefile
-index 1c754ceb..28094fa4 100644
+index a7593e8a..3a5e0452 100644
 --- a/u-boot/Makefile
 +++ b/u-boot/Makefile
-@@ -1999,7 +1999,7 @@ define filechk_defaultenv.h
+@@ -2028,7 +2028,7 @@ define filechk_defaultenv.h
  	( { grep -v '^#' | grep -v '^$$' || true ; echo '' ; } | \
  	 tr '\n' '\0' | \
  	 sed -e 's/\\\x0\s*//g' | \

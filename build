@@ -8,14 +8,14 @@ if [[ ! -d src ]]; then
   TMP=$(mktemp -d src-XXXXXX)
   trap "rm -f -r $TMP" EXIT
 
-  pkg unpack -c cache -d $TMP/tf-a mtk-atf-20240117.tar.gz \
-    https://github.com/mtk-openwrt/arm-trusted-firmware/archive/bacca82a.tar.gz
+  pkg unpack -c cache -d $TMP/tf-a mtk-atf-20250212.tar.gz \
+    https://github.com/mtk-openwrt/arm-trusted-firmware/archive/e0907706.tar.gz
 
-  pkg unpack -c cache -d $TMP/u-boot u-boot-2024.07.tar.gz \
-    https://github.com/u-boot/u-boot/archive/refs/tags/v2024.07.tar.gz
+  pkg unpack -c cache -d $TMP/u-boot u-boot-2025.04.tar.gz \
+    https://github.com/u-boot/u-boot/archive/refs/tags/v2025.04.tar.gz
 
-  pkg unpack -c cache -d $TMP/linux linux-6.13.tar.xz \
-    https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.xz
+  pkg unpack -c cache -d $TMP/linux linux-6.14.4.tar.xz \
+    https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.14.4.tar.xz
 
   if git init $TMP; then
     git -C $TMP add -f .
@@ -54,10 +54,10 @@ rm -f -r src/tf-a/build-mmc src/tf-a/build-ram
 make -C src/tf-a BUILD_BASE=build-mmc E=0 VERSION_STRING='v$(VERSION)' \
   PLAT=mt7981 BOARD_BGA=1 DRAM_USE_DDR4=1 BOOT_DEVICE=emmc LOG_LEVEL=10 \
   BL33=../u-boot/u-boot.bin MKIMAGE=../u-boot/tools/mkimage USE_MKIMAGE=1 \
-  bl2 fip
+  {,HOST}CC=clang {,HOST}LD=ld bl2 fip
 make -C src/tf-a BUILD_BASE=build-ram E=0 VERSION_STRING='v$(VERSION)' \
   PLAT=mt7981 BOARD_BGA=1 DRAM_USE_DDR4=1 BOOT_DEVICE=ram RAM_BOOT_UART_DL=1 \
-  bl2
+  {,HOST}CC=clang {,HOST}LD=ld bl2
 cp src/tf-a/build-mmc/mt7981/release/fip.bin bin/fip.img
 cp src/tf-a/build-mmc/mt7981/release/bl2.img bin/bl2.img
 cp src/tf-a/build-ram/mt7981/release/bl2.bin bin/bl2.ram

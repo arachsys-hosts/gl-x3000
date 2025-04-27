@@ -1,8 +1,8 @@
 diff --git a/linux/drivers/bus/mhi/host/pci_generic.c b/linux/drivers/bus/mhi/host/pci_generic.c
-index 56ba4192..64326e83 100644
+index 7ffea0f9..930ced2e 100644
 --- a/linux/drivers/bus/mhi/host/pci_generic.c
 +++ b/linux/drivers/bus/mhi/host/pci_generic.c
-@@ -732,6 +732,9 @@ static const struct pci_device_id mhi_pci_id_table[] = {
+@@ -784,6 +784,9 @@ static const struct pci_device_id mhi_pci_id_table[] = {
  		.driver_data = (kernel_ulong_t) &mhi_telit_fn980_hw_v1_info },
  	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0306),
  		.driver_data = (kernel_ulong_t) &mhi_qcom_sdx55_info },
@@ -12,16 +12,3 @@ index 56ba4192..64326e83 100644
  	/* Telit FN990 */
  	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, 0x1c5d, 0x2010),
  		.driver_data = (kernel_ulong_t) &mhi_telit_fn990_info },
-diff --git a/linux/drivers/net/wwan/mhi_wwan_mbim.c b/linux/drivers/net/wwan/mhi_wwan_mbim.c
-index d5a93603..8755c5e6 100644
---- a/linux/drivers/net/wwan/mhi_wwan_mbim.c
-+++ b/linux/drivers/net/wwan/mhi_wwan_mbim.c
-@@ -220,7 +220,7 @@ static int mbim_rx_verify_nth16(struct mhi_mbim_context *mbim, struct sk_buff *s
- 	if (mbim->rx_seq + 1 != le16_to_cpu(nth16->wSequence) &&
- 	    (mbim->rx_seq || le16_to_cpu(nth16->wSequence)) &&
- 	    !(mbim->rx_seq == 0xffff && !le16_to_cpu(nth16->wSequence))) {
--		net_err_ratelimited("sequence number glitch prev=%d curr=%d\n",
-+		net_dbg_ratelimited("sequence number glitch prev=%d curr=%d\n",
- 				    mbim->rx_seq, le16_to_cpu(nth16->wSequence));
- 	}
- 	mbim->rx_seq = le16_to_cpu(nth16->wSequence);

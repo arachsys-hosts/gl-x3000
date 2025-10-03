@@ -1,5 +1,5 @@
 diff --git a/linux/arch/arm64/boot/dts/mediatek/Makefile b/linux/arch/arm64/boot/dts/mediatek/Makefile
-index b763b737..ad467833 100644
+index a4df4c21..dd79ce8d 100644
 --- a/linux/arch/arm64/boot/dts/mediatek/Makefile
 +++ b/linux/arch/arm64/boot/dts/mediatek/Makefile
 @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
@@ -27,7 +27,7 @@ index 00000000..d4ffbe76
 +	compatible = "glinet,gl-x3000", "mediatek,mt7981";
 +
 +	chosen {
-+		bootargs = "console=ttyS0,115200n8 loglevel=3 root=PARTLABEL=root rootwait";
++		bootargs = "console=ttyS0,115200n8 loglevel=3 pcie_port_pm=off root=PARTLABEL=root rootwait";
 +	};
 +
 +	aliases {

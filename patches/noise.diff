@@ -1,5 +1,5 @@
 diff --git a/linux/drivers/mmc/host/mtk-sd.c b/linux/drivers/mmc/host/mtk-sd.c
-index d7020e06..385771ca 100644
+index daed659f..2a74c527 100644
 --- a/linux/drivers/mmc/host/mtk-sd.c
 +++ b/linux/drivers/mmc/host/mtk-sd.c
 @@ -1279,7 +1279,7 @@ static void msdc_track_cmd_data(struct msdc_host *host, struct mmc_command *cmd)

@@ -1,8 +1,8 @@
 diff --git a/linux/drivers/bus/mhi/host/pci_generic.c b/linux/drivers/bus/mhi/host/pci_generic.c
-index 4edb5bb4..b6083f5c 100644
+index 0884a384..3aa78124 100644
 --- a/linux/drivers/bus/mhi/host/pci_generic.c
 +++ b/linux/drivers/bus/mhi/host/pci_generic.c
-@@ -911,6 +911,9 @@ static const struct pci_device_id mhi_pci_id_table[] = {
+@@ -924,6 +924,9 @@ static const struct pci_device_id mhi_pci_id_table[] = {
  		.driver_data = (kernel_ulong_t) &mhi_telit_fn980_hw_v1_info },
  	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0306),
  		.driver_data = (kernel_ulong_t) &mhi_qcom_sdx55_info },

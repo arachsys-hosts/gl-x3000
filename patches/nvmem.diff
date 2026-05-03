@@ -118,10 +118,10 @@ index 00000000..fd727288
 +}
 +device_initcall(blk_notifications_init);
 diff --git a/linux/block/partitions/core.c b/linux/block/partitions/core.c
-index 815ed33c..ad345dc5 100644
+index 74022875..c42403c3 100644
 --- a/linux/block/partitions/core.c
 +++ b/linux/block/partitions/core.c
-@@ -10,6 +10,8 @@
+@@ -11,6 +11,8 @@
  #include <linux/ctype.h>
  #include <linux/vmalloc.h>
  #include <linux/raid/detect.h>
@@ -130,7 +130,7 @@ index 815ed33c..ad345dc5 100644
  #include "check.h"
  
  static int (*const check_part[])(struct parsed_partitions *) = {
-@@ -286,6 +288,74 @@ static ssize_t whole_disk_show(struct device *dev,
+@@ -287,6 +289,74 @@ static ssize_t whole_disk_show(struct device *dev,
  }
  static const DEVICE_ATTR(whole_disk, 0444, whole_disk_show, NULL);
  
@@ -205,7 +205,7 @@ index 815ed33c..ad345dc5 100644
  /*
   * Must be called either with open_mutex held, before a disk can be opened or
   * after all disk users are gone.
-@@ -360,6 +430,8 @@ static struct block_device *add_partition(struct gendisk *disk, int partno,
+@@ -361,6 +431,8 @@ static struct block_device *add_partition(struct gendisk *disk, int partno,
  			goto out_put;
  	}
  
@@ -215,10 +215,10 @@ index 815ed33c..ad345dc5 100644
  	dev_set_uevent_suppress(pdev, 1);
  	err = device_add(pdev);
 diff --git a/linux/drivers/mmc/core/block.c b/linux/drivers/mmc/core/block.c
-index 9cc47bf9..ebbdae21 100644
+index 05ee76cb..6d7c5d9c 100644
 --- a/linux/drivers/mmc/core/block.c
 +++ b/linux/drivers/mmc/core/block.c
-@@ -2651,6 +2651,7 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
+@@ -2604,6 +2604,7 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
  	md->disk->major	= MMC_BLOCK_MAJOR;
  	md->disk->minors = perdev_minors;
  	md->disk->first_minor = devidx * perdev_minors;
@@ -226,7 +226,7 @@ index 9cc47bf9..ebbdae21 100644
  	md->disk->fops = &mmc_bdops;
  	md->disk->private_data = md;
  	md->parent = parent;
-@@ -2685,6 +2686,10 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
+@@ -2638,6 +2639,10 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
  	if (area_type == MMC_BLK_DATA_AREA_MAIN)
  		dev_set_drvdata(&card->dev, md);
  	disk_fwnode = mmc_blk_get_partitions_node(parent, subname);
@@ -238,10 +238,10 @@ index 9cc47bf9..ebbdae21 100644
  			      disk_fwnode);
  	if (ret)
 diff --git a/linux/drivers/mmc/core/bus.c b/linux/drivers/mmc/core/bus.c
-index 1cf64e09..86f66b84 100644
+index be5cf338..98d757e1 100644
 --- a/linux/drivers/mmc/core/bus.c
 +++ b/linux/drivers/mmc/core/bus.c
-@@ -374,6 +374,8 @@ int mmc_add_card(struct mmc_card *card)
+@@ -375,6 +375,8 @@ int mmc_add_card(struct mmc_card *card)
  
  	mmc_add_card_debugfs(card);
  	card->dev.of_node = mmc_of_find_child_device(card->host, 0);
@@ -251,7 +251,7 @@ index 1cf64e09..86f66b84 100644
  	device_enable_async_suspend(&card->dev);
  
 diff --git a/linux/drivers/nvmem/Kconfig b/linux/drivers/nvmem/Kconfig
-index edd81144..00a2068a 100644
+index 74ddbd0f..fb994335 100644
 --- a/linux/drivers/nvmem/Kconfig
 +++ b/linux/drivers/nvmem/Kconfig
 @@ -2,6 +2,7 @@
@@ -262,7 +262,7 @@ index edd81144..00a2068a 100644
  	help
  	  Support for NVMEM(Non Volatile Memory) devices like EEPROM, EFUSES...
  
-@@ -52,6 +53,17 @@ config NVMEM_APPLE_SPMI
+@@ -63,6 +64,17 @@ config NVMEM_APPLE_SPMI
  	  This driver can also be built as a module. If so, the module
  	  will be called apple-nvmem-spmi.
  
@@ -273,7 +273,7 @@ index edd81144..00a2068a 100644
 +	depends on NVMEM
 +	select BLOCK_NOTIFIERS
 +	help
-+	  Allow block devices (or partitions) to act as NVMEM prodivers,
++	  Allow block devices (or partitions) to act as NVMEM providers,
 +	  typically used with eMMC to store MAC addresses or Wi-Fi
 +	  calibration data on embedded devices.
 +
@@ -281,10 +281,10 @@ index edd81144..00a2068a 100644
  	tristate "Broadcom On-Chip OTP Controller support"
  	depends on ARCH_BCM_IPROC || COMPILE_TEST
 diff --git a/linux/drivers/nvmem/Makefile b/linux/drivers/nvmem/Makefile
-index 2021d596..7f439658 100644
+index 7252b8ec..a455f437 100644
 --- a/linux/drivers/nvmem/Makefile
 +++ b/linux/drivers/nvmem/Makefile
-@@ -16,6 +16,8 @@ obj-$(CONFIG_NVMEM_APPLE_SPMI)		+= apple_nvmem_spmi.o
+@@ -18,6 +18,8 @@ obj-$(CONFIG_NVMEM_APPLE_SPMI)		+= apple_nvmem_spmi.o
  apple_nvmem_spmi-y			:= apple-spmi-nvmem.o
  obj-$(CONFIG_NVMEM_BCM_OCOTP)		+= nvmem-bcm-ocotp.o
  nvmem-bcm-ocotp-y			:= bcm-ocotp.o
@@ -497,10 +497,10 @@ index 00000000..6de3ea64
 +MODULE_AUTHOR("Daniel Golle <daniel@makrotopia.org>");
 +MODULE_DESCRIPTION("block device NVMEM provider");
 diff --git a/linux/drivers/nvmem/core.c b/linux/drivers/nvmem/core.c
-index 387c88c5..3ced2481 100644
+index 311cb2e5..907b18f7 100644
 --- a/linux/drivers/nvmem/core.c
 +++ b/linux/drivers/nvmem/core.c
-@@ -7,9 +7,12 @@
+@@ -7,9 +7,13 @@
   */
  
  #include <linux/device.h>
@@ -508,12 +508,13 @@ index 387c88c5..3ced2481 100644
 +#include <linux/etherdevice.h>
  #include <linux/export.h>
  #include <linux/fs.h>
++#include <linux/hex.h>
  #include <linux/idr.h>
 +#include <linux/if_ether.h>
  #include <linux/init.h>
  #include <linux/kref.h>
  #include <linux/module.h>
-@@ -786,6 +789,62 @@ static int nvmem_validate_keepouts(struct nvmem_device *nvmem)
+@@ -786,6 +790,62 @@ static int nvmem_validate_keepouts(struct nvmem_device *nvmem)
  	return 0;
  }
  
@@ -576,7 +577,7 @@ index 387c88c5..3ced2481 100644
  static int nvmem_add_cells_from_dt(struct nvmem_device *nvmem, struct device_node *np)
  {
  	struct device *dev = &nvmem->dev;
-@@ -827,6 +886,25 @@ static int nvmem_add_cells_from_dt(struct nvmem_device *nvmem, struct device_nod
+@@ -824,6 +884,25 @@ static int nvmem_add_cells_from_dt(struct nvmem_device *nvmem, struct device_nod
  		if (nvmem->fixup_dt_cell_info)
  			nvmem->fixup_dt_cell_info(nvmem, &info);
  
@@ -603,10 +604,10 @@ index 387c88c5..3ced2481 100644
  		kfree(info.name);
  		if (ret) {
 diff --git a/linux/include/linux/blkdev.h b/linux/include/linux/blkdev.h
-index fe1797bb..b9eeb788 100644
+index d463b9b5..ed5fe1f9 100644
 --- a/linux/include/linux/blkdev.h
 +++ b/linux/include/linux/blkdev.h
-@@ -82,11 +82,13 @@ struct partition_meta_info {
+@@ -83,11 +83,13 @@ struct partition_meta_info {
   * ``GENHD_FL_NO_PART``: partition support is disabled.  The kernel will not
   * scan for partitions from add_disk, and users can't add partitions manually.
   *
@@ -620,7 +621,7 @@ index fe1797bb..b9eeb788 100644
  };
  
  enum {
-@@ -1872,4 +1874,15 @@ bdev_atomic_write_unit_max_bytes(struct block_device *bdev)
+@@ -1879,4 +1881,15 @@ static inline int bio_split_rw_at(struct bio *bio,
  
  #define DEFINE_IO_COMP_BATCH(name)	struct io_comp_batch name = { }
  

@@ -31,7 +31,7 @@ index 1bc304dc..9616aa60 100755
  echo >&2 "* Unable to find the ncurses package."
  echo >&2 "* Install ncurses (ncurses-devel or libncurses-dev"
 diff --git a/linux/scripts/kconfig/nconf-cfg.sh b/linux/scripts/kconfig/nconf-cfg.sh
-index a20290b1..1c0fd881 100755
+index 4d08453f..a50507fe 100755
 --- a/linux/scripts/kconfig/nconf-cfg.sh
 +++ b/linux/scripts/kconfig/nconf-cfg.sh
 @@ -6,6 +6,12 @@ set -eu
@@ -40,13 +40,13 @@ index a20290b1..1c0fd881 100755
  
 +if echo '#include <ncurses.h>' | ${HOSTCC} -E - >/dev/null 2>&1; then
 +	echo -D_GNU_SOURCE > ${cflags}
-+	echo -lncurses -lmenu -lpanel > ${libs}
++	echo -lmenu -lpanel -lncurses > ${libs}
 +	exit 0
 +fi
 +
- PKG="ncursesw menuw panelw"
- PKG2="ncurses menu panel"
- 
+ # Keep library order for static linking (HOSTCC='cc -static')
+ PKG="menuw panelw ncursesw"
+ PKG2="menu panel ncurses"
 diff --git a/u-boot/scripts/kconfig/mconf-cfg.sh b/u-boot/scripts/kconfig/mconf-cfg.sh
 index c812872d..2d95dac6 100755
 --- a/u-boot/scripts/kconfig/mconf-cfg.sh

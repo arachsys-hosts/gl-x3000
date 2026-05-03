@@ -1,5 +1,5 @@
 diff --git a/linux/arch/arm64/boot/dts/mediatek/Makefile b/linux/arch/arm64/boot/dts/mediatek/Makefile
-index a4df4c21..dd79ce8d 100644
+index 387faa9c..941401d7 100644
 --- a/linux/arch/arm64/boot/dts/mediatek/Makefile
 +++ b/linux/arch/arm64/boot/dts/mediatek/Makefile
 @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
@@ -12,7 +12,7 @@ index a4df4c21..dd79ce8d 100644
  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7981b-xiaomi-ax3000t.dtb
 diff --git a/linux/arch/arm64/boot/dts/mediatek/mt7981a-glinet-gl-x3000.dts b/linux/arch/arm64/boot/dts/mediatek/mt7981a-glinet-gl-x3000.dts
 new file mode 100644
-index 00000000..d4ffbe76
+index 00000000..9ff33389
 --- /dev/null
 +++ b/linux/arch/arm64/boot/dts/mediatek/mt7981a-glinet-gl-x3000.dts
 @@ -0,0 +1,240 @@

@@ -112,7 +112,7 @@ Configuring the modem
 ---------------------
 
 The modem ships with firmware RM520NGLAAR01A07M4G which can be upgraded
-to the current (2025-06-12) release RM520NGLAAR03A04M4G_A0.301.A0.301
+to the current (2026-02-10) release RM520NGLAAR03A04M4G_A0.302.A0.302
 using QFirehose. Configure it with AT commands on /dev/ttyUSB2: this is
 a fake serial port so the baud rate is ignored. Settings persist across
 power cycles. AT+QGMR reports the current firmware version.
@@ -124,7 +124,7 @@ automation and switch the modem back to a generic profile with:
   AT+QMBNCFG="autosel",0
   AT+QMBNCFG="deactivate"
   AT+QMBNCFG="select","ROW_Commercial"
-  AT+QCFG=“clat”,0
+  AT+QCFG="clat",0
   AT+QMAP="ippt_nat",0
 
 Provide sensible APN defaults when not set by MBIM:

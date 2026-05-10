@@ -8,11 +8,11 @@ if [[ ! -d src ]]; then
   TMP=$(mktemp -d src-XXXXXX)
   trap "rm -f -r $TMP" EXIT
 
-  pkg unpack -c cache -d $TMP/tf-a mtk-atf-20250212.tar.gz \
-    https://github.com/mtk-openwrt/arm-trusted-firmware/archive/e0907706.tar.gz
+  pkg unpack -c cache -d $TMP/tf-a mtk-atf-20260123.tar.gz \
+    https://github.com/mtk-openwrt/arm-trusted-firmware/archive/370650b3.tar.gz
 
-  pkg unpack -c cache -d $TMP/u-boot u-boot-2025.04.tar.gz \
-    https://github.com/u-boot/u-boot/archive/refs/tags/v2025.04.tar.gz
+  pkg unpack -c cache -d $TMP/u-boot u-boot-2026.04.tar.gz \
+    https://github.com/u-boot/u-boot/archive/refs/tags/v2026.04.tar.gz
 
   pkg unpack -c cache -d $TMP/linux linux-7.0.3.tar.xz \
     https://www.kernel.org/pub/linux/kernel/v7.x/linux-7.0.3.tar.xz
@@ -48,7 +48,8 @@ fi
 cp config/u-boot.cfg src/u-boot/.config
 cp config/u-boot.env src/u-boot/board/mediatek/mt7981/gl-x3000.env
 cp config/u-boot.dts src/u-boot/arch/arm/dts/mt7981-glinet-gl-x3000.dts
-make -C src/u-boot CC='clang -target aarch64' clean olddefconfig u-boot.bin
+make -C src/u-boot CC=clang CLANG_FLAGS=--target=aarch64 \
+  clean olddefconfig u-boot.bin
 
 rm -f -r src/tf-a/build-mmc src/tf-a/build-ram
 make -C src/tf-a BUILD_BASE=build-mmc E=0 VERSION_STRING='v$(VERSION)' \

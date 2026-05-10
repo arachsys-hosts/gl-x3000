@@ -12,29 +12,29 @@ index daed659f..2a74c527 100644
  }
  
 diff --git a/tf-a/bl2/bl2_main.c b/tf-a/bl2/bl2_main.c
-index f12c1a5e..795b2f25 100644
+index 8b63d21b..b37cb66c 100644
 --- a/tf-a/bl2/bl2_main.c
 +++ b/tf-a/bl2/bl2_main.c
-@@ -100,7 +100,6 @@ void bl2_main(void)
+@@ -77,7 +77,6 @@ void __no_pauth bl2_main(u_register_t arg0, u_register_t arg1, u_register_t arg2
  #endif
  
  	NOTICE("BL2: %s\n", build_version_string);
 -	NOTICE("BL2: %s\n", build_message);
  
- 	/* Perform remaining generic architectural setup in S-EL1 */
- 	bl2_arch_setup();
+ #if PSA_FWU_SUPPORT
+ 	fwu_init();
 diff --git a/tf-a/bl31/bl31_main.c b/tf-a/bl31/bl31_main.c
-index 83be0f6f..29c604b5 100644
+index 04170512..14ecd58b 100644
 --- a/tf-a/bl31/bl31_main.c
 +++ b/tf-a/bl31/bl31_main.c
-@@ -133,7 +133,6 @@ void bl31_main(void)
- 	manage_extensions_nonsecure_per_world();
+@@ -131,7 +131,6 @@ void __no_pauth bl31_main(u_register_t arg0, u_register_t arg1, u_register_t arg
+ 	cm_manage_extensions_per_world();
  
  	NOTICE("BL31: %s\n", build_version_string);
 -	NOTICE("BL31: %s\n", build_message);
  
- #if FEATURE_DETECTION
- 	/* Detect if features enabled during compilation are supported by PE. */
+ #if ENABLE_RUNTIME_INSTRUMENTATION
+ 	PMF_CAPTURE_TIMESTAMP(bl_svc, BL31_ENTRY, PMF_CACHE_MAINT);
 diff --git a/u-boot/common/version.c b/u-boot/common/version.c
 index 6e27bb80..97b7dfe8 100644
 --- a/u-boot/common/version.c

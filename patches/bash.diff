@@ -1,0 +1,10 @@
+diff --git a/u-boot/scripts/check-local-export b/u-boot/scripts/check-local-export
+index 6ccc2f46..3930a71c 100755
+--- a/u-boot/scripts/check-local-export
++++ b/u-boot/scripts/check-local-export
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env bash
++#!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0-only
+ #
+ # Copyright (C) 2022 Masahiro Yamada <masahiroy@kernel.org>

@@ -34,22 +34,65 @@ index b5ecf137..ebc0b360 100644
  $(call allow-override,CXX,$(LLVM_PREFIX)clang++$(LLVM_SUFFIX))
  $(call allow-override,STRIP,$(LLVM_PREFIX)llvm-strip$(LLVM_SUFFIX))
  else
-diff --git a/u-boot/Makefile b/u-boot/Makefile
-index 3a5e0452..ec0c7fd9 100644
---- a/u-boot/Makefile
-+++ b/u-boot/Makefile
-@@ -392,13 +392,8 @@ include scripts/Kbuild.include
- # Make variables (CC, etc...)
+diff --git a/u-boot/arch/arm/cpu/armv8/u-boot.lds b/u-boot/arch/arm/cpu/armv8/u-boot.lds
+index 231ab28b..ff1659ee 100644
+--- a/u-boot/arch/arm/cpu/armv8/u-boot.lds
++++ b/u-boot/arch/arm/cpu/armv8/u-boot.lds
+@@ -154,7 +154,7 @@ SECTIONS
+ 	/*
+ 	 * arch/arm/lib/crt0_64.S assumes __bss_start - __bss_end % 8 == 0
+ 	 */
+-	.bss ADDR(.rela.dyn) (OVERLAY) : {
++	.bss ALIGN(8) : {
+ 		__bss_start = .;
+ 		*(.bss*)
+ 		. = ALIGN(8);
+diff --git a/u-boot/drivers/clk/mediatek/clk-mtk.c b/u-boot/drivers/clk/mediatek/clk-mtk.c
+index b4de3871..485c5205 100644
+--- a/u-boot/drivers/clk/mediatek/clk-mtk.c
++++ b/u-boot/drivers/clk/mediatek/clk-mtk.c
+@@ -36,7 +36,7 @@
  
- AS		= $(CROSS_COMPILE)as
--# Always use GNU ld
--ifneq ($(shell $(CROSS_COMPILE)ld.bfd -v 2> /dev/null),)
--LD		= $(CROSS_COMPILE)ld.bfd
--else
- LD		= $(CROSS_COMPILE)ld
--endif
--CC		= $(CROSS_COMPILE)gcc
-+CC		= $(CROSS_COMPILE)cc
- CPP		= $(CC) -E
- AR		= $(CROSS_COMPILE)ar
- NM		= $(CROSS_COMPILE)nm
+ /* shared functions */
+ 
+-static const int mtk_common_clk_of_xlate(struct clk *clk,
++static int mtk_common_clk_of_xlate(struct clk *clk,
+ 					 struct ofnode_phandle_args *args,
+ 					 const struct mtk_clk_tree *tree)
+ {
+@@ -316,7 +316,7 @@ static void mtk_clk_print_mux_parents(struct mtk_clk_priv *priv,
+ 
+ /* apmixedsys functions */
+ 
+-static const int mtk_apmixedsys_of_xlate(struct clk *clk,
++static int mtk_apmixedsys_of_xlate(struct clk *clk,
+ 					 struct ofnode_phandle_args *args)
+ {
+ 	struct mtk_clk_priv *priv = dev_get_priv(clk->dev);
+@@ -590,7 +590,7 @@ static void mtk_apmixedsys_dump(struct udevice *dev)
+ 
+ /* topckgen functions */
+ 
+-static const int mtk_topckgen_of_xlate(struct clk *clk,
++static int mtk_topckgen_of_xlate(struct clk *clk,
+ 				       struct ofnode_phandle_args *args)
+ {
+ 	struct mtk_clk_priv *priv = dev_get_priv(clk->dev);
+@@ -903,7 +903,7 @@ static void mtk_topckgen_dump(struct udevice *dev)
+ 
+ /* infrasys functions */
+ 
+-static const int mtk_infrasys_of_xlate(struct clk *clk,
++static int mtk_infrasys_of_xlate(struct clk *clk,
+ 				       struct ofnode_phandle_args *args)
+ {
+ 	struct mtk_clk_priv *priv = dev_get_priv(clk->dev);
+@@ -1083,7 +1083,7 @@ static void mtk_infrasys_dump(struct udevice *dev)
+ 
+ /* CG functions */
+ 
+-static const int mtk_clk_gate_of_xlate(struct clk *clk,
++static int mtk_clk_gate_of_xlate(struct clk *clk,
+ 				       struct ofnode_phandle_args *args)
+ {
+ 	struct mtk_cg_priv *priv = dev_get_priv(clk->dev);

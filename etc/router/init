@@ -28,7 +28,7 @@ case "$1" in
 
     dmesg --console-off
     while read TTY _; do
-      daemon -c -r agetty $TTY
+      daemon -c -r sulogin $TTY
     done < /proc/consoles
 
     nft -f /etc/filter

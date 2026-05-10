@@ -92,21 +92,20 @@ tight but there are no side clips to release.
 Network boot
 ------------
 
-To tftp boot a kernel image, power on the router with the reset button
-held. After a couple of seconds, the 1Gbps LAN interface will be configured
-with address 172.16.0.1 and attempt to fetch and run the file gl-x3000.itb
-by tftp from 172.16.0.2.
+To tftp boot a kernel image, power on the router with the reset button held.
+After a couple of seconds, the 1Gbps LAN interface will be configured
+with address 192.168.0.1/24. The bootloader listens for an incoming tftp
+transfer and boots the received file.
 
-A directory /tmp/tftp can be exported using dnsmasq with
+A suitable kernel plus initramfs is built in bin/ramfs.itb. It can be
+sent with
 
-  dnsmasq --enable-tftp --no-daemon --port=0 --tftp-root=/tmp/tftp
-
-and a suitable kernel plus initramfs is built in bin/ramfs.itb.
+  curl -T bin/ramfs.itb tftp://192.168.0.1/
 
 The power LED is switched on when the kernel starts. It flashes as
 userspace boots and generates an ephemeral ssh host key, then illuminates
 solidly again once boot is complete. The device is now accessible by ssh
-on 172.16.0.1 with an empty root password.
+on 192.168.0.1 with an empty root password.
 
 
 Configuring the modem

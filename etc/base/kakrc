@@ -8,6 +8,8 @@ set-option -add global ui_options terminal_set_title=false
 
 add-highlighter global/window-wrap wrap
 
+map global insert <up> '<a-;>gu'
+map global insert <down> '<a-;>gd'
 map global insert <pageup> '<a-;><pageup>'
 map global insert <pagedown> '<a-;><pagedown>'
 map global insert <a-b> '<a-;>b<a-;>;'
@@ -18,6 +20,7 @@ map global insert <a-e> '<a-;>e<a-;>;'
 map global insert <a-E> '<a-;><a-e><a-;>;'
 map global insert <a-f> '<a-;>w<right>'
 map global insert <a-F> '<a-;><a-w><right>'
+map global insert <a-j> '<a-;><a-j>'
 map global insert <a-esc> '<esc>'
 map global insert <c-a> '<home>'
 map global insert <c-b> '<left>'
@@ -31,13 +34,26 @@ map global insert <c-w> '<a-;>b<a-;>d'
 map global insert <c-W> '<a-;><a-b><a-;>d'
 
 map global normal <#> ':comment-line<ret>'
-map global normal <home> 'gh'
-map global normal <end> 'gl'
-map global normal <a-left> 'Gh'
-map global normal <a-right> 'Gl'
-map global normal <a-up> 'x<a-_>dhP'
-map global normal <a-down> 'x<a-_>dp'
-map global normal <a-home> 'Gh'
-map global normal <a-end> 'Gl'
-map global normal <s-pageup> 'Gtvv'
-map global normal <s-pagedown> 'Gbvv'
+map -atomic global normal <up> 'gu'
+map -atomic global normal <down> 'gd'
+map -atomic global normal <home> 'gh'
+map -atomic global normal <end> 'gl'
+map -atomic global normal <a-left> 'Gh'
+map -atomic global normal <a-right> 'Gl'
+map -atomic global normal <a-up> 'x<a-_>dhP'
+map -atomic global normal <a-down> 'x<a-_>dp'
+map -atomic global normal <a-home> 'Gh'
+map -atomic global normal <a-end> 'Gl'
+map -atomic global normal <s-pageup> 'Gtvv'
+map -atomic global normal <s-pagedown> 'Gbvv'
+
+hook global RegisterModified \" %{
+  nop %sh{
+    if test -w /proc/$kak_client_pid/fd/1; then
+      if test -t 1; then
+        printf '\e]52;c;%s\e\\' \
+          $(printf %s "$kak_main_reg_dquote" | base64 -w 0)
+      fi >>/proc/$kak_client_pid/fd/1
+    fi
+  }
+}

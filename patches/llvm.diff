@@ -1,5 +1,5 @@
 diff --git a/linux/Makefile b/linux/Makefile
-index ddcc6dca..a874a99d 100644
+index c61ea07e..4426d975 100644
 --- a/linux/Makefile
 +++ b/linux/Makefile
 @@ -445,6 +445,9 @@ HOST_LFS_CFLAGS := $(shell getconf LFS_CFLAGS 2>/dev/null)
@@ -12,28 +12,6 @@ index ddcc6dca..a874a99d 100644
  ifneq ($(LLVM),)
  ifneq ($(filter %/,$(LLVM)),)
  LLVM_PREFIX := $(LLVM)
-@@ -525,7 +528,7 @@ KBUILD_PROCMACROLDFLAGS := $(or $(PROCMACROLDFLAGS),$(KBUILD_HOSTLDFLAGS))
- CPP		= $(CC) -E
- ifneq ($(LLVM),)
- CC		= $(LLVM_PREFIX)clang$(LLVM_SUFFIX)
--LD		= $(LLVM_PREFIX)ld.lld$(LLVM_SUFFIX)
-+LD		= $(LLVM_PREFIX)ld$(LLVM_SUFFIX)
- AR		= $(LLVM_PREFIX)llvm-ar$(LLVM_SUFFIX)
- LLVM_LINK	= $(LLVM_PREFIX)llvm-link$(LLVM_SUFFIX)
- NM		= $(LLVM_PREFIX)llvm-nm$(LLVM_SUFFIX)
-diff --git a/linux/tools/scripts/Makefile.include b/linux/tools/scripts/Makefile.include
-index 41971a68..fe556a91 100644
---- a/linux/tools/scripts/Makefile.include
-+++ b/linux/tools/scripts/Makefile.include
-@@ -62,7 +62,7 @@ endif
- 
- $(call allow-override,CC,$(LLVM_PREFIX)clang$(LLVM_SUFFIX))
- $(call allow-override,AR,$(LLVM_PREFIX)llvm-ar$(LLVM_SUFFIX))
--$(call allow-override,LD,$(LLVM_PREFIX)ld.lld$(LLVM_SUFFIX))
-+$(call allow-override,LD,$(LLVM_PREFIX)ld$(LLVM_SUFFIX))
- $(call allow-override,CXX,$(LLVM_PREFIX)clang++$(LLVM_SUFFIX))
- $(call allow-override,STRIP,$(LLVM_PREFIX)llvm-strip$(LLVM_SUFFIX))
- else
 diff --git a/u-boot/arch/arm/cpu/armv8/u-boot.lds b/u-boot/arch/arm/cpu/armv8/u-boot.lds
 index 231ab28b..ff1659ee 100644
 --- a/u-boot/arch/arm/cpu/armv8/u-boot.lds

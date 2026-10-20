@@ -46,7 +46,7 @@ case "$1" in
     ip address add 192.168.0.1/24 dev br0
     ip address add 2001:2::1/64 dev br0
 
-    for LED in internet:wwan0 wifi:2g:wlan0 wifi:5g:wlan1; do
+    for LED in wan:wwan0 wlan-2ghz:wlan0 wlan-5ghz:wlan1; do
       echo netdev >/sys/class/leds/green:${LED%:*}/trigger
       echo ${LED##*:} >/sys/class/leds/green:${LED%:*}/device_name
       echo 1 >/sys/class/leds/green:${LED%:*}/link

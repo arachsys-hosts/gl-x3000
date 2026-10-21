@@ -15,7 +15,7 @@ new file mode 100644
 index 00000000..5d4802ac
 --- /dev/null
 +++ b/linux/arch/arm64/boot/dts/mediatek/mt7981a-glinet-gl-x3000.dts
-@@ -0,0 +1,355 @@
+@@ -0,0 +1,359 @@
 +// SPDX-License-Identifier: GPL-2.0-only OR MIT
 +
 +/dts-v1/;
@@ -342,6 +342,10 @@ index 00000000..5d4802ac
 +&pwm {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pwm_pins>;
++};
++
++&sgmiisys0 {
++	mediatek,pnswap;
 +};
 +
 +&uart0 {
